@@ -1,24 +1,36 @@
 import java.util.*;
 
-class Solution {  
+class Solution {
+    public static int answer = 0;
+    
     public boolean isPrime(int n) {
         for(int i=2; i<=(int)Math.sqrt(n); i++) {
             if(n % i == 0) return false;
         }
         return true;
-    } 
+    }
+    
+    public void comb(int[] nums, boolean[] visited, int start, int depth) {
+        if(depth == 3) {
+            int sum = 0;
+            for(int i=0; i<nums.length; i++) {
+                if(visited[i]) sum += nums[i];
+            }
+            if(isPrime(sum)) answer++;
+            return;
+        }
+        
+        for(int i=start; i<nums.length; i++) {
+            visited[i] = true;
+            comb(nums, visited, i + 1, depth + 1);
+            visited[i] = false;
+        }
+    }
     
     public int solution(int[] nums) {
-        int answer = 0;
         
-        for(int x = 0; x < nums.length - 2; x++) {
-            for(int y = x + 1; y<nums.length - 1; y++) {
-                for(int z = y + 1; z<nums.length; z++) {
-                    int sum = nums[x] + nums[y] + nums[z];
-                    if(isPrime(sum)) answer++;
-                }
-            }
-        }
+        boolean[] visited = new boolean[nums.length];
+        comb(nums, visited, 0, 0);
         
         return answer;
     }
