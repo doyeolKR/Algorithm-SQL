@@ -1,21 +1,25 @@
-class Solution {
+import java.util.*;
 
-    private boolean[] prime = new boolean[3001];
-
+class Solution {  
+    public boolean isPrime(int n) {
+        for(int i=2; i<=(int)Math.sqrt(n); i++) {
+            if(n % i == 0) return false;
+        }
+        return true;
+    } 
+    
     public int solution(int[] nums) {
-        setPrimeArr();
-        int count = 0;
-        for(int i = 0; i < nums.length - 2; i++) 
-            for(int j = i + 1; j < nums.length - 1; j++) 
-                for(int k = j + 1; k < nums.length; k++) 
-                    if (!prime[nums[i] + nums[j] + nums[k]]) count++;
-
-        return count;
-    }
-
-    private void setPrimeArr() {
-        for(int i = 2; i * i <= 3000; i++)
-            for(int j = i; i * j <= 3000; j++)
-                prime[i * j] = true;
+        int answer = 0;
+        
+        for(int x = 0; x < nums.length - 2; x++) {
+            for(int y = x + 1; y<nums.length - 1; y++) {
+                for(int z = y + 1; z<nums.length; z++) {
+                    int sum = nums[x] + nums[y] + nums[z];
+                    if(isPrime(sum)) answer++;
+                }
+            }
+        }
+        
+        return answer;
     }
 }
