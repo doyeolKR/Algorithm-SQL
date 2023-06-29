@@ -1,23 +1,20 @@
 class Solution {
     public String solution(String s) {
         StringBuilder sb = new StringBuilder();     
-        String[] words = s.split("");
+        boolean toUpper = true;
         
-        int idx = 0;
+        char[] arr = s.toCharArray();
         
-        for(int i=0; i<words.length; i++) {
-            String word = words[i];
-            
-            if(word.equals(" ")) {
-                idx = 0;
+        for(char c : arr) {
+            if(!Character.isAlphabetic(c)) {
+                sb.append(c);
+                toUpper = true;
             }
             else {
-                if(idx%2==0) word = word.toUpperCase();
-                else word = word.toLowerCase();
-                idx++;
+                if(toUpper) sb.append(Character.toUpperCase(c));
+                else sb.append(Character.toLowerCase(c));
+                toUpper = !toUpper;
             }
-              
-            sb.append(word);
         }
         
         return sb.toString();
