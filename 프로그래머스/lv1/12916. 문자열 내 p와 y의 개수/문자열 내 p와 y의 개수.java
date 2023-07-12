@@ -1,13 +1,10 @@
 class Solution {
     boolean solution(String s) {
-        int pVal = 0;
-        int yVal = 0;
+        String str = s.toLowerCase();
         
-        for(int i=0; i<s.length(); i++) {
-            if(s.charAt(i) == 'p' || s.charAt(i) == 'P') pVal++;
-            else if(s.charAt(i) == 'y' || s.charAt(i) == 'Y') yVal++;
-        }
+        int ps = str.length() - str.replace("p", "").length();
+        int ys = str.length() - str.replace("y", "").length();
         
-        return pVal == yVal;
+        return ps == ys;
     }
 }
