@@ -1,2 +1,2 @@
 SELECT animal_id, name FROM animal_ins 
-WHERE intake_condition != "Aged";
+WHERE Not intake_condition = "Aged";
