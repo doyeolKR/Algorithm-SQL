@@ -15,7 +15,9 @@ class Solution {
         
         StringBuilder sb = new StringBuilder();
         for(int i=9; i>=0; i--) {
-            sb.append(String.valueOf(i).repeat(Math.min(arr1[i], arr2[i])));
+            for(int j=0; j<Math.min(arr1[i], arr2[i]); j++){
+                sb.append(i);
+            }
         }
         String answer = sb.toString();
         if(answer.equals("")) answer = "-1";
