@@ -1,33 +1,23 @@
 class Solution {
-    private final String[] pronunciations = {
-      "aya", "ye", "woo", "ma"  
-    };
-    
-    private boolean check(String word) {
-        String str = "";
-        String pronunciation = "";
-        for(char c : word.toCharArray()) {
-            str += c;
-            for(int i = 0; i < pronunciations.length; i++) {
-                if(str.equals(pronunciations[i])) {
-                    if(str.equals(pronunciation))
-                        return false;
-                    pronunciation = pronunciations[i];
-                    str = "";
-                }
-            }
-        }
-        if(!str.equals("")) return false;
-        else return true;
-    }
-    
     public int solution(String[] babbling) {
         int answer = 0;
         
         for(int i = 0; i < babbling.length; i++) {
-            String word = babbling[i];
-            if(check(word))
-                answer++;
+            if(
+                babbling[i].contains("ayaaya") ||
+                babbling[i].contains("yeye") ||
+                babbling[i].contains("woowoo") ||
+                babbling[i].contains("mama") 
+              )
+                continue;
+            
+            babbling[i] = babbling[i].replace("aya", " ");
+            babbling[i] = babbling[i].replace("ye", " ");
+            babbling[i] = babbling[i].replace("woo", " ");
+            babbling[i] = babbling[i].replace("ma", " ");
+            babbling[i] = babbling[i].replace(" ", "");
+            
+            if(babbling[i].length() == 0) answer++;
         }
         return answer;
     }
