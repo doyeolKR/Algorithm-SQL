@@ -1,0 +1,6 @@
+SELECT
+    TRUNCATE(price, -4) as PRICE_GROUP,
+    count(*) as PRODUCTS
+FROM product
+GROUP BY price_GROUP
+ORDER BY PRICE_GROUP
