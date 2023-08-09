@@ -2,32 +2,21 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String[] wallpaper) {
-        int row = wallpaper.length;
-        int col = wallpaper[0].length();
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
         
-        char[][] screen = new char[row][col];
-        
-        for(int i = 0; i < row; i++) {
-            screen[i] = wallpaper[i].toCharArray();
-        }
-        
-        int[] direction = new int[4];
-        direction[0] = row;
-        direction[1] = col;
-        direction[2] = 0;
-        direction[3] = 0;
-        
-        for(int y = 0; y < screen.length; y++) {
-            for(int x = 0; x < screen[0].length; x++) {
-                if(screen[y][x] == '#') {
-                    if(y < direction[0]) direction[0] = y;
-                    if(x < direction[1]) direction[1] = x;
-                    if(y >= direction[2]) direction[2] = y+1;
-                    if(x >= direction[3]) direction[3] = x+1;
+        for(int y = 0; y < wallpaper.length; y++) {
+            for(int x = 0; x < wallpaper[y].length(); x++) {
+                if(wallpaper[y].charAt(x) == '#') {
+                    minX = Math.min(minX, x);
+                    minY = Math.min(minY, y);
+                    maxX = Math.max(maxX, x);
+                    maxY = Math.max(maxY, y);
                 }
             }
         }
-        
-        return direction;
+        return new int[]{minY, minX, maxY + 1, maxX + 1};
     }
 }
