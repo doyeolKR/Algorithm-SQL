@@ -1,45 +1,57 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.util.*;
+import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer stz;
+        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
-        Stack<String> left = new Stack<>();
-        Stack<String> right = new Stack<>();
+        String str = br.readLine();
+        int N = Integer.parseInt(br.readLine());
+        List<Character> list = new LinkedList<>();
 
-        for(char c : br.readLine().toCharArray()) {
-            left.push(String.valueOf(c));
+        for(int i = 0; i < str.length(); i++) {
+            list.add(str.charAt(i));
         }
 
-        int N = Integer.parseInt(br.readLine());
+        ListIterator<Character> iterator = list.listIterator();
+
+        while(iterator.hasNext()) {
+            iterator.next();
+        }
 
         for(int i = 0; i < N; i++) {
-            stz = new StringTokenizer(br.readLine());
-
-            String command = stz.nextToken();
+            String commandLine = br.readLine();
+            char command = commandLine.charAt(0);
 
             switch(command) {
-                case "L" :
-                    if(!left.isEmpty()) right.push(left.pop());
+                case 'L' :
+                    if(iterator.hasPrevious()) iterator.previous();
                     break;
-                case "D" :
-                    if(!right.isEmpty()) left.push(right.pop());
+                case 'D' :
+                    if(iterator.hasNext()) iterator.next();
                     break;
-                case "B" :
-                    if(!left.isEmpty()) left.pop();
+                case 'B' :
+                    if(iterator.hasPrevious()) {
+                        iterator.previous();
+                        iterator.remove();
+                    }
                     break;
-                case "P" :
-                    left.push(stz.nextToken());
+                case 'P' :
+                    iterator.add(commandLine.charAt(2));
                     break;
             }
         }
-        StringBuilder sb = new StringBuilder();
-        while(!left.isEmpty()) right.push(left.pop());
-        while(!right.isEmpty()) sb.append(right.pop());
-        System.out.println(sb.toString());
+
+        for(char c : list) {
+            bw.write(c);
+        }
+
+        bw.flush();
+        bw.close();
+
     }
 }
