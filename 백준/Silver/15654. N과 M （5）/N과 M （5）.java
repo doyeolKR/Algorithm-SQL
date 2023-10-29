@@ -7,14 +7,14 @@ public class Main {
     public static int N, M;
     public static int[] arr, ans;
     public static boolean[] visited;
-    public static BufferedWriter bw;
+    public static StringBuilder sb = new StringBuilder();
 
     public static void dfs(int m) throws IOException {
         if(m == M) {
             for(int i = 0; i < M; i++) {
-                bw.write(ans[i] + " ");
+                sb.append(ans[i]).append(" ");
             }
-            bw.write("\n");
+            sb.append("\n");
             return;
         }
 
@@ -30,7 +30,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        bw = new BufferedWriter(new OutputStreamWriter(System.out));
         StringTokenizer stz;
 
         stz = new StringTokenizer(br.readLine());
@@ -51,8 +50,7 @@ public class Main {
         Arrays.sort(arr);
 
         dfs(0);
-        bw.flush();;
-        bw.close();
+        System.out.println(sb.toString());
 
     }
 }
