@@ -26,7 +26,8 @@ public class Main {
 
         Collections.sort(list, Comparator.reverseOrder());
 
-        list.forEach(name -> System.out.println(name));
+        list.forEach(name -> sb.append(name).append("\n"));
+        System.out.println(sb);
 
     }
 }
