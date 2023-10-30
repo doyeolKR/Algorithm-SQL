@@ -18,16 +18,11 @@ public class Main {
             String name = stz.nextToken();
             String status = stz.nextToken();
 
-            map.put(name, status);
+            if(map.containsKey(name)) map.remove(name);
+            else map.put(name, status);
         }
 
-        List<String> list = new ArrayList<>();
-
-        Set<String> names = map.keySet();
-        for(String name : names) {
-            String status = map.get(name);
-            if(status.equals("enter")) list.add(name);
-        }
+        List<String> list = new ArrayList<>(map.keySet());
 
         Collections.sort(list, Comparator.reverseOrder());
 
