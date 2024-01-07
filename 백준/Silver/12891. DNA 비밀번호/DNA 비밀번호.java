@@ -36,8 +36,8 @@ public class Main {
 
         for(int i = P; i < S; i++) {
             int j = i - P;
-            remove(DNA[j]);
             add(DNA[i]);
+            remove(DNA[j]);
             if (checkSecretNumber == 4) ans++;
         }
 
