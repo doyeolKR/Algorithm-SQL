@@ -1,13 +1,11 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
     static int[] checkArr = new int[4];
     static int[] myArr = new int[4];
-    static int checkSecretNumber = 0;
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -25,20 +23,19 @@ public class Main {
         stz = new StringTokenizer(br.readLine());
         for(int i = 0; i < 4; i++) {
             checkArr[i] = Integer.valueOf(stz.nextToken());
-            if(checkArr[i] == 0) checkSecretNumber++;
         }
 
         for(int i = 0; i < P; i++) {
             add(DNA[i]);
         }
 
-        if(checkSecretNumber == 4) ans++;
+        if(isOk()) ans++;
 
         for(int i = P; i < S; i++) {
             int j = i - P;
             add(DNA[i]);
             remove(DNA[j]);
-            if (checkSecretNumber == 4) ans++;
+            if(isOk()) ans++;
         }
 
         System.out.print(ans);
@@ -48,19 +45,15 @@ public class Main {
         switch (c) {
             case 'A' :
                 myArr[0]++;
-                if(myArr[0] == checkArr[0]) checkSecretNumber++;
                 break;
             case 'C' :
                 myArr[1]++;
-                if(myArr[1] == checkArr[1]) checkSecretNumber++;
                 break;
             case 'G' :
                 myArr[2]++;
-                if(myArr[2] == checkArr[2]) checkSecretNumber++;
                 break;
             case 'T' :
                 myArr[3]++;
-                if(myArr[3] == checkArr[3]) checkSecretNumber++;
                 break;
         }
     }
@@ -68,21 +61,25 @@ public class Main {
     private static void remove(char c) {
         switch (c) {
             case 'A' :
-                if(myArr[0] == checkArr[0]) checkSecretNumber--;
                 myArr[0]--;
                 break;
             case 'C' :
-                if(myArr[1] == checkArr[1]) checkSecretNumber--;
                 myArr[1]--;
                 break;
             case 'G' :
-                if(myArr[2] == checkArr[2]) checkSecretNumber--;
                 myArr[2]--;
                 break;
             case 'T' :
-                if(myArr[3] == checkArr[3]) checkSecretNumber--;
                 myArr[3]--;
                 break;
         }
+    }
+
+    private static boolean isOk() {
+        for(int i = 0; i < 4; i++) {
+            if(checkArr[i] == 0) continue;
+            if(myArr[i] < checkArr[i]) return false;
+        }
+        return true;
     }
 }
