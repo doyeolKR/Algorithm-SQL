@@ -1,8 +1,6 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -11,26 +9,34 @@ public class Main {
         StringTokenizer stz;
 
         int N = Integer.valueOf(br.readLine());
-        List<Integer> list = new LinkedList<>();
+        int[] A = new int[N];
 
         stz = new StringTokenizer(br.readLine());
 
         for(int i = 0 ; i < N; i++) {
-            list.add(Integer.valueOf(stz.nextToken()));
+            A[i] = Integer.valueOf(stz.nextToken());
         }
 
         for(int i = 1; i < N; i++) {
+            int index = i;
+            int value = A[i];
+
             for(int j = 0; j < i; j++) {
-                if(list.get(j) > list.get(i)) {
-                    int value = list.remove(i);
-                    list.add(j,value);
+                if(A[j] > A[i]) {
+                    index = j;
+                    break;
                 }
             }
+            for(int j = i; j > index; j--) {
+                A[j] = A[j-1];
+            }
+            A[index] = value;
         }
 
-        int[] S = new int[N + 1];
-        for(int i = 1; i < N+1; i++) {
-            S[i] = S[i - 1] + list.get(i - 1);
+        int[] S = new int[N];
+        S[0] = A[0];
+        for(int i = 1; i < N; i++) {
+            S[i] = S[i - 1] + A[i];
         }
 
         int ans = 0;
