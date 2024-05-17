@@ -42,8 +42,6 @@ public class Main {
     public static StringTokenizer stz;
     public static int countryCnt;
     public static int myCountryId;
-    public static int rating = 1;
-    public static int duplication = 0;
     public static Country[] countries;
 
     public static void makeCountries() throws IOException {
@@ -72,21 +70,16 @@ public class Main {
 
         Arrays.sort(countries);
 
-        countries[0].rating = rating;
+        int rank = 1; // 초기 등수는 1로 설정
 
-        for(int i = 1; i < countries.length; i++) {
-            if(
-                countries[i-1].gold == countries[i].gold &&
-                countries[i-1].silver == countries[i].silver &&
-                countries[i-1].bronze == countries[i].bronze
-            ) {
-                countries[i].rating = rating;
-                duplication++;
+        countries[0].rating = 1;
+        
+        for (int i = 1; i < countryCnt; i++) {
+            if (countries[i].compareTo(countries[i - 1]) != 0) {
+                // 이전 국가와 메달 수가 다를 때만 순위 증가
+                rank = i + 1;
             }
-            else {
-                countries[i].rating = (++rating + duplication);
-                duplication = 0;
-            }
+            countries[i].rating = rank;
         }
 
         for(int i = 0; i < countries.length; i++) {
