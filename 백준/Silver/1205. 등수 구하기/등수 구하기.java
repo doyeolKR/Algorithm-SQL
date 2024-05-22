@@ -16,51 +16,72 @@ public class Main {
     public static int taesooScore;
     public static int rankSize;
     public static List<Integer> scoreList;
+    public static String status;
 
     public static void makeScores() throws IOException {
         stz = new StringTokenizer(br.readLine());
 
         for(int i = 0; i < scoreCnt; i++) {
-            scores[i] = Integer.parseInt(stz.nextToken());
+            scores[i] = Integer.valueOf(stz.nextToken());
         }
     }
 
     public static boolean inRankPossible() {
         if(scoreCnt < rankSize) {
+            status = "spaceRank";
             return true;
         }
-        return scores[scores.length - 1] < taesooScore;
+
+        for(int i = 0; i < scoreCnt; i++) {
+            if(scores[i] < taesooScore) {
+                status = "fullRank";
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    public static void insertScore() {
-        boolean inserted = false;
+    public static boolean insertScore() {
         for(int i = 0; i < scoreList.size(); i++) {
             if(scoreList.get(i) < taesooScore) {
                 scoreList.add(i, taesooScore);
-                inserted = true;
-                break;
+                return true;
             }
         }
-        if(!inserted) {
-            scoreList.add(taesooScore);
+        return false;
+    }
+
+    public static boolean isRenewRank() {
+        if(status.equals("spaceRank")) {
+            if(!insertScore()) {
+                scoreList.add(taesooScore);
+            }
+            return true;
         }
+
+        if(status.equals("fullRank")) {
+            if(!insertScore())
+                return false;
+        }
+        return true;
     }
 
     public static void main(String[] args) throws IOException {
         br = new BufferedReader(new InputStreamReader(System.in));
         stz = new StringTokenizer(br.readLine());
 
-        scoreCnt = Integer.parseInt(stz.nextToken());
-        taesooScore = Integer.parseInt(stz.nextToken());
-        rankSize = Integer.parseInt(stz.nextToken());
+        scoreCnt = Integer.valueOf(stz.nextToken());
+        scores = new int[scoreCnt];
+        taesooScore = Integer.valueOf(stz.nextToken());
+        rankSize = Integer.valueOf(stz.nextToken());
 
-        if(scoreCnt == 0) {
+        if(scoreCnt != 0)
+            makeScores();
+        else {
             System.out.println(1);
             return;
         }
-
-        scores = new int[scoreCnt];
-        makeScores();
 
         scoreList = Arrays.stream(scores)
                 .boxed()
@@ -71,16 +92,21 @@ public class Main {
             return;
         }
 
-        insertScore();
+        if(!isRenewRank()) {
+            System.out.println(-1);
+            return;
+        }
 
         int rank = 1;
-        for(int i = 0; i < scoreList.size(); i++) {
-            if(scoreList.get(i) == taesooScore) {
+
+        for(int i = 1; i < scoreList.size(); i++) {
+            if(scoreList.get(i - 1) != scoreList.get(i) && scoreList.get(i) == taesooScore) {
                 rank = i + 1;
                 break;
             }
         }
 
         System.out.println(rank);
+
     }
 }
