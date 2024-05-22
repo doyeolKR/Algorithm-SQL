@@ -44,9 +44,6 @@ public class Main {
         if(!inserted) {
             scoreList.add(taesooScore);
         }
-        if(scoreList.size() > rankSize) {
-            scoreList.remove(scoreList.size() - 1);
-        }
     }
 
     public static void main(String[] args) throws IOException {
