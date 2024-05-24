@@ -1,36 +1,53 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
-	public static void main(String[] args) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int n = Integer.parseInt(br.readLine());
-		
-		int left=0, right=-1;
-		int[] arr = new int[n];
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		for(int i=0; i<n; i++) {
-			arr[i] = Integer.parseInt(st.nextToken());
-			right = Math.max(right, arr[i]);
-		}
-        
-		int m = Integer.parseInt(br.readLine());
-		while(left<=right) {
-			int mid = (left+right)/2;
-			long budget =0;
-			for(int i=0; i<n; i++) {
-				if(arr[i]>mid) budget += mid;
-				else budget+= arr[i];
-			}
-			if(budget<=m) {
-				left = mid+1;
-			}else {
-				right = mid-1;
-			}
-		}
-		System.out.println(right);
-	}
+        int countryCnt = Integer.valueOf(br.readLine());
+        List<Integer> countries = new ArrayList<>();
+        int totalRequest = 0;
+
+        StringTokenizer stz = new StringTokenizer(br.readLine());
+
+        for(int i = 0; i < countryCnt; i++) {
+            int request = Integer.valueOf(stz.nextToken());
+            countries.add(request);
+            totalRequest += request;
+        }
+
+        int budget = Integer.valueOf(br.readLine());
+
+        if(totalRequest <= budget) {
+            Collections.sort(countries);
+            System.out.println(countries.get(countryCnt - 1));
+            return;
+        }
+
+        int average = 0;
+
+        while(true) {
+            average = budget / countryCnt;
+            int okCountries = 0;
+
+            for(int i = countries.size() - 1; i >= 0 ; i--) {
+                int request = countries.get(i);
+
+                if(request <= average) {
+                    budget -= request;
+                    countries.remove(i);
+                    countryCnt--;
+                    okCountries++;
+                }
+            }
+            if(okCountries == 0)
+                break;
+        }
+
+        System.out.println(average);
+
+    }
 }
