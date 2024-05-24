@@ -4,39 +4,66 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    private static int N, M;
-    private static Map<String, Integer> map = new HashMap<>();
+
+    public static int wordCnt;
+    public static int standardLength;
+    public static BufferedReader br;
+    public static StringTokenizer stz;
+    public static HashMap<String, Integer> map =  new HashMap<>();
+
+    static class WordInfo implements Comparable<WordInfo>{
+        public String word;
+        public int cnt;
+
+        public WordInfo(String word, int cnt) {
+            this.word = word;
+            this.cnt = cnt;
+        }
+
+        @Override
+        public int compareTo(WordInfo o) {
+            if(o.cnt != this.cnt)
+                return o.cnt - this.cnt;
+            if(o.word.length() != this.word.length())
+                return o.word.length() - this.word.length();
+
+            return this.word.compareTo(o.word);
+        }
+    }
 
     public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer stz = new StringTokenizer(br.readLine());
+        br = new BufferedReader(new InputStreamReader(System.in));
+        stz = new StringTokenizer(br.readLine());
+
+        wordCnt = Integer.valueOf(stz.nextToken());
+        standardLength = Integer.valueOf(stz.nextToken());
+
+        for(int i = 0; i < wordCnt; i++) {
+            String word = br.readLine();
+
+            if(map.containsKey(word))
+                map.put(word, map.get(word) + 1);
+            else
+                if(word.length() >= standardLength) map.put(word, 1);
+        }
+
+        List<WordInfo> list = new ArrayList<>();
+
+        for(Map.Entry<String, Integer> map : map.entrySet()) {
+            String word = map.getKey();
+            int cnt = map.getValue();
+
+            list.add(new WordInfo(word, cnt));
+        }
+
+        Collections.sort(list);
+
         StringBuilder sb = new StringBuilder();
 
-        N = Integer.parseInt(stz.nextToken());
-        M = Integer.parseInt(stz.nextToken());
-
-        for(int i = 0; i < N; i++) {
-            String str = br.readLine();
-            if(str.length() >= M) {
-                map.put(str, map.getOrDefault(str, 0) + 1);
-            }
+        for(WordInfo info : list) {
+            sb.append(info.word).append("\n");
         }
 
-        List<String> list = new ArrayList<>(map.keySet());
-        list.sort(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                if(map.get(o1) == map.get(o2)) {
-                    if(o1.length() == o2.length())
-                        return o1.compareTo(o2);
-                    else return o2.length() - o1.length();
-                }
-                return map.get(o2) - map.get(o1);
-            }
-        });
-        for(String key : list) {
-            sb.append(key).append("\n");
-        }
         System.out.println(sb);
     }
 }
