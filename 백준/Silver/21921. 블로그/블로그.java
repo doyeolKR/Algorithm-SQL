@@ -1,43 +1,74 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-    private static final BufferedReader br = new BufferedReader(new InputStreamReader(System.in), 1<<16);
+    public static int[] visitorCnt;
+    public static int afterStart, period;
 
-    public static void main(String[] args) throws Exception {
-        new Main().solution();
-    }
+    public static long searchMaxVisitor() {
+        long maxVisitor = 0;
+        long sum = 0;
 
-    public void solution() throws Exception {
-        StringTokenizer st = new StringTokenizer(br.readLine());
-        int n = Integer.parseInt(st.nextToken());
-        int x = Integer.parseInt(st.nextToken());
-
-        int[] arr = new int[n];
-        st = new StringTokenizer(br.readLine());
-        for (int i = 0; i < n; i++)
-            arr[i] = Integer.parseInt(st.nextToken());
-
-        int sum = 0;
-        for (int i = 0; i < x; i++) sum += arr[i];
-
-        int max = sum;
-        int maxCnt = 1;
-        for (int i = x; i < n; i++) {
-            sum += arr[i] - arr[i-x];
-            if (max == sum) maxCnt++;
-            else if (max < sum) {
-                max = sum;
-                maxCnt = 1;
+        for(int i = 0; i < afterStart; i++) {
+            if(i >= period) {
+                sum = sum - visitorCnt[i - period] + visitorCnt[i];
+                maxVisitor = Math.max(sum, maxVisitor);
+            }
+            else {
+                sum += visitorCnt[i];
+                if(i == period - 1) maxVisitor = sum;
             }
         }
-        if (max == 0) {
+        return maxVisitor;
+    }
+
+    public static long searchPeriodCnt(long maxVisitor) {
+        long sum = 0;
+        long cnt = 0;
+
+        for(int i = 0; i < afterStart; i++) {
+            if(i >= period) {
+                sum = sum - visitorCnt[i - period] + visitorCnt[i];
+                if(sum == maxVisitor) cnt++;
+            }
+            else {
+                sum += visitorCnt[i];
+                if(i == period - 1 && sum == maxVisitor)
+                    cnt++;
+            }
+        }
+        return cnt;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer stz = new StringTokenizer(br.readLine());
+
+        afterStart = Integer.valueOf(stz.nextToken());
+        period = Integer.valueOf(stz.nextToken());
+
+        visitorCnt = new int[afterStart];
+
+        stz = new StringTokenizer(br.readLine());
+
+        for(int i = 0; i < afterStart; i++) {
+            visitorCnt[i] = Integer.valueOf(stz.nextToken());
+        }
+
+        long maxVisitor = searchMaxVisitor();
+        long periodCnt = searchPeriodCnt(maxVisitor);
+
+        if(maxVisitor == 0) {
             System.out.println("SAD");
             return;
-        }
-        System.out.println(max);
-        System.out.println(maxCnt);
+        } else
+            System.out.println(maxVisitor);
+        System.out.println(periodCnt);
+
     }
 }
