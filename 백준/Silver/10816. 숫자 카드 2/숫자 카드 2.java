@@ -19,11 +19,7 @@ public class Main {
 
         for (int i = 0; i < N; i++) {
             int cardNum = Integer.parseInt(stz.nextToken());
-            if(map.containsKey(cardNum)) {
-                map.put(cardNum, map.get(cardNum) + 1);
-            } else {
-                map.put(cardNum, 1);
-            }
+            map.put(cardNum, map.getOrDefault(cardNum, 0) + 1);
         }
 
         int M = Integer.parseInt(br.readLine());
@@ -32,11 +28,7 @@ public class Main {
 
         for(int i = 0; i < M; i++) {
             int cardNum = Integer.parseInt(stz.nextToken());
-            if(map.containsKey(cardNum)) {
-                sb.append(map.get(cardNum)).append(" ");
-            } else {
-                sb.append(0).append(" ");
-            }
+            sb.append(map.getOrDefault(cardNum, 0)).append(" ");
         }
 
         System.out.print(sb);
