@@ -4,36 +4,28 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class Main {
-    static int N, cnt, apart;
+    static int N, apart;
     static int[][] map;
+    static boolean[][] visited;
     static List<Integer> ans = new ArrayList<>();
-    static Queue<int[]> q = new LinkedList<>();
     static int[] dy = {0, 0, -1, 1};
     static int[] dx = {-1, 1, 0, 0};
 
-    public static void bfs(int row, int col) {
-        map[row][col] = 0;
-        q.add(new int[]{row, col});
-        apart = 0;
+    public static void dfs(int row, int col) {
+        visited[row][col] = true;
+        apart++;
 
-        while(!q.isEmpty()) {
-            apart++;
-            int[] point = q.poll();
-            int currentRow = point[0];
-            int currentCol = point[1];
+        for(int i = 0; i < 4; i++) {
+            int nextRow = row + dy[i];
+            int nextCol = col + dx[i];
 
-            for(int i = 0; i <4; i++) {
-                int nextRow = currentRow + dy[i];
-                int nextCol = currentCol + dx[i];
-                if(nextRow >= 0 && nextRow < N && nextCol >= 0 && nextCol < N) {
-                    if(map[nextRow][nextCol] == 1) {
-                        map[nextRow][nextCol] = 0;
-                        q.add(new int[]{nextRow, nextCol});
-                    }
+            if(nextRow >= 0 && nextRow < N && nextCol >= 0 && nextCol < N) {
+                if(map[nextRow][nextCol] == 1 && !visited[nextRow][nextCol]) {
+                    dfs(nextRow, nextCol);
                 }
             }
         }
-        ans.add(apart);
+
     }
 
     public static void main(String[] args) throws IOException {
@@ -43,6 +35,7 @@ public class Main {
         N = Integer.parseInt(br.readLine());
 
         map = new int[N][N];
+        visited = new boolean[N][N];
 
         for(int i = 0; i < N; i++) {
             String str = br.readLine();
@@ -53,16 +46,17 @@ public class Main {
 
         for(int i = 0; i < N; i++) {
             for(int j = 0; j < N; j++) {
-                if(map[i][j] == 1) {
-                    cnt++;
-                    bfs(i, j);
+                if(map[i][j] == 1 && !visited[i][j]) {
+                    apart = 0;
+                    dfs(i, j);
+                    ans.add(apart);
                 }
             }
         }
 
         Collections.sort(ans);
 
-        sb.append(cnt).append("\n");
+        sb.append(ans.size()).append("\n");
 
         for(int num : ans) {
             sb.append(num).append("\n");
