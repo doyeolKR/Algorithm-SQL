@@ -1,41 +1,42 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
-    static int N, M, V;
-    static boolean[][] arr;
+    static int N, M, R, ans;
     static boolean[] visited;
-    static Queue<Integer> q = new LinkedList<>();
+    static Queue<Integer> q = new LinkedList<Integer>();
+    static List<List<Integer>> edgeList = new ArrayList<>();
     static StringBuilder sb = new StringBuilder();
 
-    private static void bfs(int start) {
-        q.add(start);
-        visited[start] = true;
+    public static void bfs(int node) {
+        visited = new boolean[N];
+        visited[node] = true;
+        q.add(node);
 
-        while(!q.isEmpty()) {
-            start = q.poll();
-            sb.append(start + " ");
+        while(!q.isEmpty()){
+            int currentNode = q.poll();
+            sb.append(currentNode + 1).append(" ");
 
-            for(int i = 1; i <= N; i++) {
-                if(arr[start][i] && !visited[i]) {
-                    q.add(i);
-                    visited[i] = true;
+            for(int nextNode : edgeList.get(currentNode)) {
+                if (!visited[nextNode]) {
+                    visited[nextNode] = true;
+                    q.add(nextNode);
                 }
             }
         }
     }
 
-    private static void dfs(int start) {
-        visited[start] = true;
-        sb.append(start + " ");
+    public static void dfs(int node) {
+        visited[node] = true;
+        sb.append(node + 1).append(" ");
 
-        for(int i = 0; i <= N; i++) {
-            if(!visited[i] && arr[start][i]) {
-                dfs(i);
+        List<Integer> list = edgeList.get(node);
+        for(int nextNode : list) {
+            if(!visited[nextNode]) {
+                visited[nextNode] = true;
+                dfs(nextNode);
             }
         }
     }
@@ -43,25 +44,36 @@ public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer stz = new StringTokenizer(br.readLine());
+
         N = Integer.parseInt(stz.nextToken());
         M = Integer.parseInt(stz.nextToken());
-        V = Integer.parseInt(stz.nextToken());
+        R = Integer.parseInt(stz.nextToken());
 
-        arr = new boolean[N+1][N+1];
-        visited = new boolean[N+1];
+        for(int i = 0; i < N; i++) {
+            edgeList.add(new ArrayList<>());
+        }
 
         for(int i = 0; i < M; i++) {
             stz = new StringTokenizer(br.readLine());
-            int a = Integer.parseInt(stz.nextToken());
-            int b = Integer.parseInt(stz.nextToken());
 
-            arr[a][b] = arr[b][a] = true;
+            int a = Integer.parseInt(stz.nextToken()) - 1;
+            int b = Integer.parseInt(stz.nextToken()) - 1;
+
+            edgeList.get(a).add(b);
+            edgeList.get(b).add(a);
         }
 
-        dfs(V);
+        for(List<Integer> edge : edgeList) {
+            Collections.sort(edge);
+        }
+
+        visited = new boolean[N];
+
+        dfs(R - 1);
         sb.append("\n");
-        visited = new boolean[N+1];
-        bfs(V);
-        System.out.println(sb);
+        bfs(R - 1);
+
+        System.out.print(sb);
+
     }
 }
