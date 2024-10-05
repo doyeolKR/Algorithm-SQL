@@ -1,65 +1,73 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
     static int N, M, R, cnt;
-    static boolean[] visited;
     static int[] ans;
-    static ArrayList<Integer>[] edges;
+    static boolean[] visited;
+    static List<List<Integer>> graph = new ArrayList<>();
+    static StringBuilder sb = new StringBuilder();
 
+    public static void dfs(int root) {
+        visited[root] = true;
+        ans[root] = ++cnt;
+
+        List<Integer> list = graph.get(root);
+        for (int num : list) {
+            if(!visited[num]) {
+                dfs(num);
+            }
+        }
+    }
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer stz;
 
-        stz = new StringTokenizer(br.readLine());
+        StringTokenizer stz = new StringTokenizer(br.readLine());
 
-        N = Integer.valueOf(stz.nextToken());
-        M = Integer.valueOf(stz.nextToken());
-        R = Integer.valueOf(stz.nextToken());
+        N = Integer.parseInt(stz.nextToken());
+        M = Integer.parseInt(stz.nextToken());
+        R = Integer.parseInt(stz.nextToken());
 
-        edges = new ArrayList[N + 1];
-        visited = new boolean[N + 1];
-        ans = new int[N + 1];
+        ans = new int[N];
+        visited = new boolean[N];
 
         for(int i = 1; i <= N; i++) {
-            edges[i] = new ArrayList<>();
+            graph.add(new ArrayList<>());
         }
+
         for(int i = 0; i < M; i++) {
             stz = new StringTokenizer(br.readLine());
-            int u = Integer.valueOf(stz.nextToken());
-            int v = Integer.valueOf(stz.nextToken());
 
-            edges[u].add(v);
-            edges[v].add(u);
-        }
-        for(int i = 1; i <= N; i++) {
-            Collections.sort(edges[i]);
+            int a = Integer.parseInt(stz.nextToken()) - 1;
+            int b = Integer.parseInt(stz.nextToken()) - 1;
+
+            graph.get(a).add(b);
+            graph.get(b).add(a);
         }
 
-        dfs(R);
+        for(List<Integer> list : graph) {
+            Collections.sort(list);
+        }
 
-        StringBuilder sb = new StringBuilder();
+        dfs(R-1);
 
-        for(int i = 1; i <= N; i++) {
-            sb.append(ans[i]).append("\n");
+        for(int num : ans) {
+            sb.append(num).append("\n");
         }
 
         System.out.print(sb);
 
-    } // main
-
-    static void dfs(int num) {
-        ans[num] = ++cnt;
-        visited[num] = true;
-        for(int value : edges[num]) {
-            if(!visited[value]) {
-                dfs(value);
-            }
-        }
     }
 }
+
+
+
+
+
+
+
+
+
