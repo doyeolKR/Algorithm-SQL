@@ -1,42 +1,44 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer stz;
+        StringBuilder sb = new StringBuilder();
 
         int N = Integer.parseInt(br.readLine());
+
         int[] arr = new int[N];
-        stz = new StringTokenizer(br.readLine());
+
+        StringTokenizer stz = new StringTokenizer(br.readLine());
 
         for(int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(stz.nextToken());
         }
 
-        int sum = Integer.parseInt(br.readLine());
-        int start = 0;
-        int end = N-1;
+        int findNum = Integer.parseInt(br.readLine());
+
+        int sIndex = 0;
+        int lIndex = N-1;
         int ans = 0;
+        int sum = 0;
 
         Arrays.sort(arr);
 
-        while(true) {
-            if(start >= end) break;
-            if(arr[start] + arr[end] == sum) {
+        while(sIndex < lIndex) {
+            sum = arr[sIndex] + arr[lIndex];
+            if(sum > findNum) lIndex--;
+            if(sum < findNum) sIndex++;
+            if(sum == findNum) {
                 ans++;
-                start++;
-                end--;
+                sIndex++;
             }
-            else if(arr[start] + arr[end] > sum) end--;
-            else start++;
         }
 
         System.out.println(ans);
 
     }
 }
+
