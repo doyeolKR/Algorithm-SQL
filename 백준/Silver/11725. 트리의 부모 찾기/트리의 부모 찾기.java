@@ -20,9 +20,7 @@ public class Main {
             int currentNode = queue.poll();
             List<Integer> childNodes = edge.get(currentNode);
 
-            for(int i = 0; i < childNodes.size(); i++) {
-                int childNode = childNodes.get(i);
-
+            for (int childNode : childNodes) {
                 if (!visited[childNode]) {
                     queue.add(childNode);
                     visited[childNode] = true;
@@ -33,9 +31,13 @@ public class Main {
     }
 
     public static void output() {
+        StringBuilder sb = new StringBuilder();
+
         for(int i = 2; i < parentNodes.length; i++) {
-            System.out.println(parentNodes[i]);
+            sb.append(parentNodes[i]).append("\n");
         }
+
+        System.out.println(sb);
     }
 
     public static void main(String[] args) throws IOException {
