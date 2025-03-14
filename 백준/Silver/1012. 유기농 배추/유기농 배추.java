@@ -1,70 +1,85 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class Main {
-    static int width, height, ans;
-    static int[][] map;
-    static boolean[][] visited;
-    static int[] dx = {-1, 1, 0, 0};
-    static int[] dy = {0, 0, -1, 1};
+    static BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    static StringBuilder sb = new StringBuilder();
+    static int width, height, cabbageCount;
+    static int [][] map;
+    static Queue<int[]> queue = new LinkedList<>();
+    static int[] dy = {-1, 0, 1, 0};
+    static int[] dx = {0, -1, 0, 1};
 
-    public static void dfs(int row, int col) {
-        visited[row][col] = true;
+    public static void bfs() {
+        while(!queue.isEmpty()) {
+            int[] currentPosition = queue.poll();
+            int row = currentPosition[0];
+            int col = currentPosition[1];
 
-        for(int i = 0; i < 4; i++) {
-            int nextRow = row + dy[i];
-            int nextCol = col + dx[i];
+            for(int i = 0; i < 4; i++) {
+                int nextRow = row + dy[i];
+                int nextCol = col + dx[i];
 
-            if(nextRow >= 0 && nextRow < height && nextCol >= 0 && nextCol < width) {
-                if(!visited[nextRow][nextCol] && map[nextRow][nextCol] == 1) {
-                    dfs(nextRow, nextCol);
-                }
-            }
-        }
-    }
-
-    public static void main(String[] args) throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringBuilder sb = new StringBuilder();
-
-        int T = Integer.parseInt(br.readLine());
-
-
-        for(int tc = 0; tc < T; tc++) {
-            StringTokenizer stz = new StringTokenizer(br.readLine());
-
-            width = Integer.parseInt(stz.nextToken());
-            height = Integer.parseInt(stz.nextToken());
-            int pointCnt = Integer.parseInt(stz.nextToken());
-
-            map = new int[height][width];
-            visited = new boolean[height][width];
-
-            for(int i = 0; i < pointCnt; i++) {
-                stz = new StringTokenizer(br.readLine());
-
-                int col = Integer.parseInt(stz.nextToken());
-                int row = Integer.parseInt(stz.nextToken());
-
-                map[row][col] = 1;
-            }
-
-            for(int i = 0; i < height; i++) {
-                for(int j = 0; j < width; j++) {
-                    if(!visited[i][j] && map[i][j] == 1) {
-                        dfs(i, j);
-                        ans++;
+                if(nextRow >= 0 && nextRow < height && nextCol >= 0 && nextCol < width) {
+                    if(map[nextRow][nextCol] == 1) {
+                        queue.add(new int[]{nextRow, nextCol});
+                        map[nextRow][nextCol] = 0;
                     }
                 }
             }
-            sb.append(ans).append("\n");
-            ans = 0;
         }
+    }
 
-        System.out.print(sb);
+    public static int findRequiredWormsCount() {
+        int ans = 0;
 
+        for(int row = 0; row < height; row++) {
+            for(int col = 0; col < width; col++) {
+                if(map[row][col] == 1) {
+                    map[row][col] = 0;
+                    queue.add(new int[]{row, col});
+                    bfs();
+                    ans++;
+                }
+            }
+        }
+        return ans;
+    }
+
+    public static void setCabbagePosition() throws IOException {
+        for(int i = 0; i < cabbageCount; i++) {
+            String[] position = br.readLine().split(" ");
+            int col = Integer.parseInt(position[0]);
+            int row = Integer.parseInt(position[1]);
+
+            map[row][col] = 1;
+        }
+    }
+
+    public static void runTestCase() throws IOException {
+        String[] info = br.readLine().split(" ");
+
+        width = Integer.parseInt(info[0]);
+        height = Integer.parseInt(info[1]);
+        cabbageCount = Integer.parseInt(info[2]);
+
+        map = new int[height][width];
+
+        setCabbagePosition();
+
+        int ans = findRequiredWormsCount();
+        sb.append(ans).append("\n");
+    }
+
+    public static void main(String[] args) throws IOException {
+        int testCase = Integer.parseInt(br.readLine());
+
+        for(int i = 0; i < testCase; i++) {
+            runTestCase();
+        }
+        System.out.println(sb);
     }
 }
-
